@@ -113,27 +113,41 @@
 </ul>
 
 <h2>Lo que esto explica del protocolo</h2>
-<p class="box k"><span class="tag i">INFERIDO</span><strong>No verificado.</strong> La REGLA 8 registra que el informe de las 06:25 no corrió el 10-02 por límite de créditos. Si ese informe está armado como <strong>Routine</strong>, no toca los 100&nbsp;US$: compite contra el límite del plan. Eso explicaría un corte teniendo 98&nbsp;US$ al lado sin usar. Las preferencias marcadas <code>[Imported from Cowork]</code> apuntan a lo mismo: Cowork tampoco cuenta.</p>
+<p class="box k"><span class="tag m">MEDIDO</span>No hay <strong>ninguna</strong> Routine en esta cuenta: <code>list_triggers</code> devuelve 0, también con <code>include_completed</code> y <code>all_in_channel</code>. La hipótesis de una versión anterior de este documento —que el informe de las 06:25 fuera una Routine compitiendo contra el límite del plan— <strong>queda descartada</strong>.</p>
+<p class="box w"><span class="tag l">LEIDO</span>Salvedad que impide cerrar el punto: la documentación de <code>list_triggers</code> dice que <em>«scheduled tasks stored locally by the Cowork desktop app are not listed»</em>. Ausencia en el listado no es prueba de ausencia. El informe corre entonces por <strong>Cowork</strong>, por <strong>cron/launchd en Chicago o Houston</strong>, o <strong>a mano</strong>.</p>
+<p>La conclusión sobre el saldo <strong>no cambia</strong>: Cowork, el CLI local y el remote control tampoco consumen el bono. Lo que cambia es el mecanismo, no el resultado.</p>
+<p class="box"><span class="tag m">MEDIDO</span>Este repositorio tampoco es la fuente del informe: el último commit de datos es del <strong>2026-05-22</strong> y no hay ningún <code>.txt</code> escrito después. No es un log diario.</p>
 
 <h2>Contradicción sin resolver</h2>
-<p class="box w"><span class="tag l">LEIDO</span>La documentación de Claude Code afirma que <em>«Routines: scheduled and triggered runs each run as a cloud session»</em>. El artículo de soporte excluye Routines del bono. Las dos son fuentes oficiales y se contradicen; <strong>no lo resolví</strong>. Posible lectura: una Routine es técnicamente una sesión de nube pero queda excluida de la promoción a propósito.</p>
+<p class="box w"><span class="tag l">LEIDO</span>La documentación de Claude Code afirma que <em>«Routines: scheduled and triggered runs each run as a cloud session»</em>. El artículo de soporte excluye Routines del bono. Las dos son fuentes oficiales y se contradicen; <strong>no lo resolví</strong>. Para esta cuenta el punto es por ahora académico: no hay Routines que medir.</p>
 
-<h2>La medición que lo decide</h2>
-<p>De solo lectura, y discrimina entre las dos hipótesis:</p>
+<h2>Qué se pierde si el check matutino no corre</h2>
+<p>El protocolo deja ver <span class="tag l">LEIDO</span> que el chequeo tiene al menos dos puntos, y <strong>no se degradan igual</strong>:</p>
+<table>
+  <thead><tr><th>Punto</th><th>Qué lee</th><th>¿Se recupera después?</th></tr></thead>
+  <tbody>
+    <tr class="hi"><td><strong>Punto 2</strong></td><td>Filtra por ARCHIVO y lee el archivo entero (REGLA 4)</td><td class="y">Sí — se pierde latencia, no datos</td></tr>
+    <tr><td><strong>Punto 1 / A</strong></td><td>Cuenta filas de la DB (REGLA 3)</td><td class="n">No — es una foto del «ahora»</td></tr>
+  </tbody>
+</table>
+<p>Como el punto 2 lee el archivo completo y no una ventana de tiempo, una corrida posterior sigue viendo lo que se escribió en los días salteados. En cambio un conteo de filas no se reconstruye: la foto de las 06:25 de un día que no corrió <strong>no existe y no se puede fabricar</strong>.</p>
+<p class="box w"><span class="tag l">LEIDO</span>Y el punto recuperable ya tiene un falso negativo demostrado: la REGLA 5 registra que del 09-29 al 10-02 el log dio <strong>cero líneas con 129 corriendo</strong>. Cero no distingue «no pasó nada» de «pasa sin escribir línea».</p>
+
+<h2>El triaje, si hay que elegir</h2>
+<p>Solo la mitad-foto es sensible a la hora. Si no se puede correr el chequeo completo:</p>
 <ul>
-  <li>Anotar el saldo exacto <strong>ahora</strong>.</li>
-  <li>Dejar correr <strong>una</strong> Routine.</li>
-  <li>Volver a mirar el saldo.</li>
+  <li><strong>Capturar el conteo de filas a las ~06:25</strong> cada día que no corra el chequeo. Es lo único irrecuperable.</li>
+  <li>El punto 2 puede esperar: una corrida el sábado cubre jueves y viernes sin pérdida.</li>
 </ul>
-<p><strong>Si bajó</strong> → las Routines sí consumen el bono, y el corte del 10-02 tuvo otra causa.<br>
-<strong>Si quedó igual</strong> → confirmado: las Routines van contra el plan. Ahí está la causa, y el arreglo es migrar el informe a una sesión de nube disparada a mano mientras dure el crédito.</p>
+<p class="box"><span class="tag i">INFERIDO</span><strong>Posible bloqueo, no verificado:</strong> si el chequeo necesita la DB y los archivos que viven en Chicago o Houston, una sesión de nube no los alcanza, y entonces correrlo a mano desde la nube no es opción. Eso hay que confirmarlo antes de planearlo.</p>
 
 <h2>Acción, con fecha límite</h2>
 <p>Quedan <strong>27 días</strong> y <strong>98&nbsp;US$</strong> que caducan sin reembolso. Para gastarlos, el trabajo pesado tiene que entrar por las cuatro filas verdes de la tabla. Todo lo que corra por Routines, Cowork, Projects o local sigue descontando del plan y deja el bono intacto hasta que expire.</p>
 
 <footer>
-  <span class="tag m">MEDIDO</span>Esta sesión es de nube: <code>CLAUDE_CODE_REMOTE=true</code>, <code>CLAUDE_CODE_REMOTE_ENVIRONMENT_TYPE=cloud_default</code>, sin <code>ANTHROPIC_API_KEY</code> en el entorno.<br><br>
-  <strong>No verificado:</strong> si el bono se está debitando efectivamente por esta sesión; cómo está implementado el informe de las 06:25; el estado de <em>usage credits</em> en la cuenta. No tengo acceso a la facturación.<br><br>
+  <span class="tag m">MEDIDO</span>Esta sesión es de nube: <code>CLAUDE_CODE_REMOTE=true</code>, <code>CLAUDE_CODE_REMOTE_ENVIRONMENT_TYPE=cloud_default</code>, sin <code>ANTHROPIC_API_KEY</code> en el entorno. Routines en la cuenta: <code>0</code>. Último commit de datos del repo: <code>2026-05-22</code>.<br><br>
+  <strong>No verificado:</strong> si el bono se está debitando efectivamente por esta sesión; dónde y cómo está implementado el informe de las 06:25; qué lee cada punto del chequeo más allá de lo que el protocolo declara; si existe una tarea programada local de Cowork (el listado no las muestra); el estado de <em>usage credits</em> en la cuenta. No tengo acceso a la facturación ni a Chicago/Houston.<br><br>
+  <strong>Corregido respecto de la primera versión:</strong> la hipótesis «el informe es una Routine» está descartada por medición.<br><br>
   Fuentes:
   <a href="https://support.claude.com/en/articles/17152539-cloud-sessions-bonus-credit-promotion">soporte 17152539</a> ·
   <a href="https://support.claude.com/en/articles/11145838">soporte 11145838</a> ·
