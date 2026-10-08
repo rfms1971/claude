@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Revisión de arquitectura NT8</title>
+<style>
+  :root{
+    --bg:#faf9f7; --fg:#1a1915; --muted:#6b6862; --line:#e0ddd6;
+    --card:#ffffff; --ok:#2f6f4f; --no:#a3342a; --warn:#8a5a12;
+    --accent:#3b5bdb; --okbg:#eaf3ee; --nobg:#f8ecea; --warnbg:#fdf4e3;
+    --code:#f4f2ee;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#17171a; --fg:#eceae5; --muted:#9b978f; --line:#2e2d31;
+      --card:#1f1f23; --ok:#7bc49a; --no:#e59289; --warn:#e0b063;
+      --accent:#8fa6f5; --okbg:#1c2a22; --nobg:#2b1e1c; --warnbg:#2a2318;
+      --code:#232327;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#17171a; --fg:#eceae5; --muted:#9b978f; --line:#2e2d31;
+    --card:#1f1f23; --ok:#7bc49a; --no:#e59289; --warn:#e0b063;
+    --accent:#8fa6f5; --okbg:#1c2a22; --nobg:#2b1e1c; --warnbg:#2a2318;
+    --code:#232327;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--fg);
+    font:16px/1.62 ui-sans-serif,-apple-system,"Segoe UI",Roboto,sans-serif;
+    padding:40px 16px 90px;
+  }
+  .wrap{max-width:820px;margin:0 auto}
+  h1{font-size:2rem;line-height:1.15;margin:0 0 .25em;letter-spacing:-.025em}
+  .sub{color:var(--muted);margin:0 0 2.2em;font-size:.95rem}
+  h2{font-size:1.32rem;margin:2.8em 0 .7em;letter-spacing:-.015em;
+     padding-bottom:.32em;border-bottom:1px solid var(--line)}
+  h3{font-size:1.04rem;margin:1.9em 0 .55em;letter-spacing:-.01em}
+  h4{font-size:.94rem;margin:1.4em 0 .4em;color:var(--muted);
+     text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+  p{margin:0 0 1em}
+  pre{
+    background:var(--code);border:1px solid var(--line);border-radius:8px;
+    padding:14px 16px;overflow-x:auto;margin:0 0 1.1em;
+    font:12.5px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.87em;
+       background:var(--code);border:1px solid var(--line);border-radius:4px;padding:1px 5px}
+  pre code{background:none;border:none;padding:0;font-size:inherit}
+  .tag{
+    display:inline-block;font-size:.66rem;font-weight:700;letter-spacing:.07em;
+    padding:2px 7px;border-radius:4px;vertical-align:1px;margin-right:7px;
+    border:1px solid var(--line);color:var(--muted);background:var(--card);
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  .tag.m{color:var(--ok);background:var(--okbg);border-color:transparent}
+  .tag.l{color:var(--accent)}
+  .tag.i{color:var(--warn);background:var(--warnbg);border-color:transparent}
+  .tag.x{color:var(--no);background:var(--nobg);border-color:transparent}
+  .box{border-left:3px solid var(--line);padding:3px 0 3px 16px;margin:0 0 1.2em;
+       color:var(--muted);font-size:.94rem}
+  .box.w{border-color:var(--warn)} .box.k{border-color:var(--accent)}
+  .box.g{border-color:var(--ok)} .box.r{border-color:var(--no)}
+  .box strong{color:var(--fg)}
+  .alarm{
+    background:var(--nobg);border:1px solid var(--line);border-left:4px solid var(--no);
+    border-radius:10px;padding:16px 20px;margin:0 0 1.4em;
+  }
+  .alarm h3{margin-top:0;color:var(--no)}
+  table{width:100%;border-collapse:collapse;margin:0 0 1.3em;font-size:.93rem}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-weight:600;font-size:.76rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+  td.y{color:var(--ok);font-weight:600} td.n{color:var(--no);font-weight:600}
+  ul,ol{margin:0 0 1.1em;padding-left:1.35em}
+  li{margin:0 0 .45em}
+  .verdict{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 2.2em}
+  .verdict div{flex:1 1 170px;background:var(--card);border:1px solid var(--line);
+               border-radius:10px;padding:13px 15px}
+  .verdict b{display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:.07em;
+             color:var(--muted);margin-bottom:4px}
+  .verdict span{font-size:.95rem;font-weight:600;line-height:1.35;display:block}
+  .verdict .ok span{color:var(--ok)} .verdict .no span{color:var(--no)}
+  .verdict .warn span{color:var(--warn)}
+  footer{margin-top:3.4em;padding-top:1.3em;border-top:1px solid var(--line);
+         font-size:.83rem;color:var(--muted)}
+  footer a{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Revisión de arquitectura</h1>
+<p class="sub">Entorno de desarrollo NT8 · local → Git → VPS Chicago → CrossTrade · 8 de octubre de 2026</p>
+
+<div class="verdict">
+  <div class="ok"><b>Sólido</b><span>El split local/frontera y el repo en <code>bin/Custom</code></span></div>
+  <div class="no"><b>Premisa falsa</b><span>«Desplegar sin interrumpir la operativa»</span></div>
+  <div class="warn"><b>Punto ciego</b><span>Ranking de candidatos sobre fills simulados</span></div>
+</div>
+
+<h2>El riesgo que atraviesa las cuatro preguntas</h2>
+
+<div class="alarm">
+  <h3>129 estrategias, un solo ensamblado</h3>
+  <p><span class="tag l">LEIDO</span>El soporte de NinjaTrader lo dice textual: <em>«NinjaTrader always compiles all indicators and strategies — not just one»</em>. Todo tu código custom termina en un único <code>NinjaTrader.Custom.dll</code>.</p>
+  <p><strong>Consecuencia:</strong> un error de compilación en un archivo nuevo no rompe ese archivo. Rompe las 129. El radio de explosión de cualquier commit es el sistema entero.</p>
+  <p>Tu pipeline propuesto —un modelo de 7B escribiendo <code>.cs</code> directamente en la carpeta viva, git push, despliegue al VPS— está optimizado para <em>velocidad de escritura</em> y alimenta un sistema con <em>radio de explosión máximo</em>. Ese es el desajuste central del diseño.</p>
+</div>
+
+<p>Todo lo que sigue es, en el fondo, cómo meter compuertas entre esas dos cosas.</p>
+
+<h2>1 · El flujo de IA</h2>
+
+<h3>El split está bien planteado</h3>
+<p>Frontera para diseño, 7B local para transcripción mecánica: es el reparto correcto. El diseño de una estrategia es donde el razonamiento paga; escribir el esqueleto de <code>OnStateChange</code> no lo es.</p>
+
+<h3>Pero las «Custom Instructions» no van a resolver la alucinación</h3>
+<p>El problema con NT8 es peor que con C# genérico, por dos razones que se multiplican:</p>
+<ul>
+  <li>La API de NT8 es una superficie estrecha y propietaria, poco representada en los datos de entrenamiento.</li>
+  <li>Un modelo de 7B tiene recuerdo paramétrico débil: cuando no sabe, <strong>confabula nombres de método plausibles</strong>. Y «plausible» en NT8 es exactamente el modo de fallo más caro, porque compila en tu cabeza y no en el compilador.</li>
+</ul>
+<p>Prohibirle código de NT7 en el prompt ayuda con lo que vos ya sabés que está mal. No ayuda con lo que el modelo inventa.</p>
+
+<h3>Dos cambios que sí lo resuelven</h3>
+
+<h4>a · Grounding por recuperación, no por instrucción</h4>
+<p>Ya tenés la API entera en disco. En vez de <em>describirle</em> la API en el prompt, <strong>dale los archivos</strong>. Los indicadores y estrategias nativos que NT8 instala en <code>bin/Custom</code> son ejemplos reales y compilables de la API exacta de tu versión. Un ejemplo correcto pesa más que un párrafo de reglas, sobre todo en un modelo chico.</p>
+<p>En Cline, referenciá archivos concretos con <code>@</code> en vez de confiar en la instrucción general.</p>
+
+<h4>b · Una compuerta de compilación dentro del lazo</h4>
+<p>Esto es lo decisivo. <strong>A un 7B no se lo convence de no alucinar; se lo corrige con un error de compilador.</strong> Si Cline puede compilar y leer el error, las APIs inventadas mueren solas en la iteración.</p>
+<p>NT8 genera <code>NinjaTrader.Custom.csproj</code> en <code>bin/Custom</code>. Podés construirlo desde PowerShell sin tocar la plataforma:</p>
+<pre><code>dotnet build "$env:USERPROFILE\Documents\NinjaTrader 8\bin\Custom\NinjaTrader.Custom.csproj" `
+  -v:quiet --nologo 2&gt;&amp;1 | Select-String -Pattern "error|Error"</code></pre>
+<p>Eso convierte «ojalá esté bien» en «iterá hasta que compile», y además <strong>desacopla «compila» de «reiniciar la plataforma»</strong>, que es media solución a la pregunta 3.</p>
+<p class="box w"><span class="tag i">A VERIFICAR</span>El build externo puede no coincidir exactamente con el compilador interno de NT8, que inyecta regiones generadas al guardar. Usalo como pre-filtro rápido, no como palabra final. Confirmalo comparando un archivo que compile afuera contra F5 en NT8.</p>
+
+<h4>c · Que el agente no escriba en la carpeta viva</h4>
+<p>Hoy Cline guarda directo en <code>bin/Custom</code>. Eso pone un archivo a medio escribir del agente dentro de la ruta de compilación. En el portátil se sobrevive; el problema es que se vuelve hábito y el hábito viaja al VPS. Que escriba en <code>Custom/_staging/</code> y que un paso explícito promueva.</p>
+
+<h3>Una observación sobre el retorno</h3>
+<p>El volumen de código por estrategia en NT8 es chico y la API es implacable. Si el 7B necesita cuatro iteraciones y cada una cuesta un ciclo de recarga, el modelo «gratis» sale más caro en reloj que uno de frontera que acierta a la primera. Con la compuerta de compilación del punto (b) el cálculo cambia, porque las iteraciones pasan a ser baratas. Sin ella, no.</p>
+
+<h2>2 · Control de versiones</h2>
+
+<p class="box"><span class="tag l">LEIDO</span>Dos restricciones confirmadas: solo compila lo que está dentro de <code>bin/Custom</code>, y NT8 <strong>reescribe una región generada dentro de tus <code>.cs</code> al guardar</strong>.</p>
+
+<h3>Invertí la lógica: negar todo, permitir lo tuyo</h3>
+<p>Un <code>.gitignore</code> por lista negra te obliga a perseguir cada archivo nuevo que NT8 invente en la próxima versión. Por lista blanca, lo desconocido queda afuera por defecto — que es la postura correcta cuando el otro lado genera archivos sin avisarte.</p>
+
+<pre><code># === Negar todo por defecto ===
+/*
+
+# === Permitir la infraestructura del repo ===
+!/.gitignore
+!/.gitattributes
+!/README.md
+
+# === Permitir SOLO tus subcarpetas ===
+!/Strategies/
+/Strategies/*
+!/Strategies/MC_Candidato/
+!/Strategies/MC_Candidato_EJES/
+!/Strategies/MC_Candidato_VALOR/
+!/Strategies/MC_Candidato_VENTANAS/
+
+!/Indicators/
+/Indicators/*
+!/Indicators/MC_/
+
+!/AddOns/
+/AddOns/*
+!/AddOns/MC_/
+
+# === Dentro de lo permitido, igual fuera lo derivado ===
+**/obj/
+**/bin/
+*.dll
+*.pdb
+*.user
+.vs/</code></pre>
+
+<p>La regla de Git que hace que esto funcione: <strong>no podés readmitir un archivo si su carpeta padre sigue excluida.</strong> Por eso cada nivel va en dos líneas — <code>!/Strategies/</code> readmite la carpeta, <code>/Strategies/*</code> vuelve a excluir su contenido, y recién entonces se readmite lo tuyo.</p>
+
+<h3>Tres cosas que conviene saber antes</h3>
+<ul>
+  <li><strong>Un clon fresco no te da un NT8 funcionando.</strong> Estás versionando tu fuente, no el entorno. El VPS necesita una instalación de NT8 ya operativa; Git solo deposita los <code>.cs</code> adentro.</li>
+  <li><strong>Vas a ver diffs que no escribiste.</strong> NT8 reescribe su región generada cada vez que guardás. Tus diffs no son puramente tus ediciones. Es tolerable, pero no lo confundas con un cambio real al revisar un PR.</li>
+  <li><strong>Poné tu código en subcarpetas con nombre desde hoy.</strong> La lista blanca de arriba depende de eso. Si tus <code>.cs</code> están sueltos en <code>Strategies/</code> mezclados con los nativos, no hay patrón que los separe limpio.</li>
+</ul>
+
+<h2>3 · Despliegue al VPS</h2>
+
+<div class="alarm">
+  <h3>La premisa de la pregunta no se sostiene</h3>
+  <p>Pediste «pasar los <code>.cs</code> al VPS <strong>sin interrumpir la operativa en vivo</strong>». Eso no existe en NT8: para que un <code>.cs</code> nuevo tenga efecto hay que compilar, y compilar reconstruye el ensamblado entero y recarga los objetos NinjaScript.</p>
+  <p>La pregunta correcta no es cómo evitar la interrupción. Es <strong>cómo hacerla programada, corta y verificada.</strong></p>
+</div>
+
+<p class="box w"><span class="tag i">NO VERIFICADO</span>Busqué confirmación explícita de qué le pasa a una estrategia <em>corriendo</em> durante un compile y no la encontré en fuente oficial. Lo que sí está confirmado es que el compile reconstruye todo. Trátalo como «la interrumpe» hasta que lo midas vos en Sim101, que es la postura segura.</p>
+
+<h3>La forma que recomiendo</h3>
+
+<ol>
+  <li><strong>Compuerta de compilación antes de que salga del portátil.</strong> Un hook de <code>pre-push</code> que corra el build del punto 1b. Si no compila, no viaja. Esta es la única defensa real contra el radio de explosión de 129.</li>
+  <li><strong>Desplegá etiquetas, nunca una rama.</strong> Una rama se mueve; una etiqueta no. Con <code>git tag</code> la pregunta «qué está corriendo ahora mismo en Chicago» tiene una respuesta exacta en vez de una aproximada. Eso importa el día que algo falle y tengas que reconstruir qué había puesto.</li>
+  <li><strong>Modelo pull, no push.</strong> Un script programado en el VPS que hace <code>fetch</code> y revisa si hay una etiqueta nueva. Así el VPS no necesita ningún puerto entrante abierto, que es la diferencia entre una superficie de ataque y ninguna.</li>
+  <li><strong>Ventana: el corte diario de Globex, 16:00 CT.</strong> <span class="tag m">MEDIDO</span>Verifiqué contra las especificaciones de CME que es el único corte diario de MGC y MCL. Mercado cerrado, posiciones planas, reinicio limpio. Desplegar con mercado abierto es elegir que te agarre con posición.</li>
+  <li><strong>Staging en el VPS.</strong> El pull cae en un clon aparte; un paso explícito copia a <code>bin/Custom</code>. Nunca un <code>git pull</code> directo sobre la carpeta viva: un conflicto de merge ahí te deja archivos con marcadores <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> dentro de la ruta de compilación.</li>
+  <li><strong>Verificación posterior.</strong> Ver la sección siguiente — es el eslabón que hoy no existe.</li>
+</ol>
+
+<h3>El eslabón que falta, y que ya te costó</h3>
+<p class="box r"><strong>Hoy encontramos 12 estrategias habilitadas y completamente inertes</strong> — las familias <code>VOLR_</code> y <code>VOLC_</code>, en cero exacto sobre los seis instrumentos, mientras <code>CIER_</code> y <code>RNGR_</code> operaban. Ninguna alarma se disparó, porque no hay nada que verifique que lo desplegado <em>hace</em> algo.</p>
+<p>Automatizar el despliegue sin automatizar la verificación no reduce ese riesgo: lo aumenta, porque sube la frecuencia con la que podés introducirlo. La compuerta posterior mínima, después de cada reinicio:</p>
+<ul>
+  <li><strong>Conteo:</strong> ¿hay N estrategias habilitadas, con N el número esperado?</li>
+  <li><strong>Vida:</strong> ¿cada <em>familia</em> registró al menos una ejecución en las últimas X horas de mercado abierto?</li>
+</ul>
+<p>El segundo es el que hoy habría cantado. Y notá que es por familia, no por estrategia: una estrategia puede legítimamente no tener señal, pero que doce en cero abarquen exactamente una rama del árbol no es ausencia de señal, es un defecto.</p>
+
+<h3>Sobre CrossTrade</h3>
+<p class="box w"><span class="tag x">BLOQUEADO</span>Vi en resultados de búsqueda que CrossTrade expone herramientas que escriben <code>.cs</code>, compilan, despliegan y detienen estrategias en vivo. <strong>No lo pude verificar:</strong> <code>crosstrade.io</code> está bloqueado por el proxy de egreso de mi contenedor. Si es así, ya estás pagando parte del pipeline que estás por construir — vale leer su documentación antes de escribir la tuya.</p>
+
+<h2>4 · Riesgos de ejecución y réplica</h2>
+
+<h3>Lo obligatorio a nivel de código, confirmado contra la documentación de NT8</h3>
+
+<h4>Órdenes protectoras: en OnExecutionUpdate, no en OnOrderUpdate</h4>
+<p><span class="tag l">LEIDO</span>La guía de NT8 es explícita: si los fills manejan la lógica, usá <code>OnExecutionUpdate()</code>, que siempre se dispara <em>después</em> de <code>OnOrderUpdate()</code>. Advierte que rastrear fills dentro de <code>OnOrderUpdate()</code> <em>«can adversely affect your strategy»</em>, porque la lógica interna corre entre las dos llamadas. Para stops y targets, recomienda trabajar directamente en <code>OnExecutionUpdate()</code>.</p>
+<p><span class="tag l">LEIDO</span>Y dentro de ese callback, <strong>usá solo los datos pasados por valor</strong>, no el estado global.</p>
+
+<h4>Overfills</h4>
+<p><span class="tag l">LEIDO</span>Definición oficial: una orden vuelve <code>Filled</code> o <code>PartFilled</code> <em>después</em> de haber sido marcada para cancelación. Causas típicas: un <code>CancelOrder()</code> explícito, el llenado de un hermano OCO, o una expiración.</p>
+<p>Se detectan en <code>OnOrderUpdate()</code>. La decisión que tenés que tomar explícitamente en cada estrategia es: ante un overfill, <strong>¿aplanás o lo ignorás?</strong> No dejarlo escrito es dejar que el default decida por vos.</p>
+
+<h4>No confíes en OnPositionUpdate con fills simultáneos</h4>
+<p><span class="tag l">LEIDO</span>La guía advierte que múltiples fills al mismo tiempo sobre el mismo instrumento <em>«might result in an incorrect OnPositionUpdate»</em>, porque la secuencia de eventos no está garantizada por diseño de la API del proveedor.</p>
+<p class="box r"><strong>Esto te pega directo.</strong> En tu grilla hay <strong>seis estrategias por instrumento solo en <code>MC_Candidato</code></strong>, más las de EJES, VALOR y VENTANAS. Fills simultáneos sobre el mismo símbolo no son un caso raro en tu setup: son el caso normal.</p>
+
+<h4>Posición de estrategia ≠ posición de cuenta</h4>
+<p><span class="tag m">MEDIDO</span>En tu propia grilla las dos columnas difieren hoy, y la columna <code>Sync</code> está en <code>Falso</code> en buena parte de las filas. Con varias estrategias compartiendo <code>Sim101</code>, eso es esperable — pero significa que la regla tiene que estar escrita:</p>
+<ul>
+  <li>Lógica de la estrategia → <code>Position</code> (su propia posición)</li>
+  <li>Guardas de cuenta → <code>PositionAccount</code></li>
+  <li><strong>Nunca mezclarlas.</strong> Una estrategia que dimensiona con la posición de cuenta está dimensionando con las operaciones de las otras 128.</li>
+</ul>
+
+<h4>Rechazos</h4>
+<p>Un <code>Rejected</code> sin manejar deja una posición desnuda: entraste, el stop fue rechazado, y nadie se enteró. Manejo explícito de <code>OrderState.Rejected</code> en toda estrategia que vaya a tocar dinero real.</p>
+
+<h3>Lo específico de replicar a cuentas de fondeo</h3>
+
+<table>
+  <thead><tr><th>Riesgo</th><th>Por qué NT8 no te protege</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Desincronización</strong></td>
+      <td>El copiador es un segundo sistema que puede fallar en silencio. NT8 se cree plano y la cuenta fondeada está larga. La lógica de riesgo de tu estrategia opera sobre la posición equivocada, y nada en NT8 lo sabe.</td>
+    </tr>
+    <tr>
+      <td><strong>Reglas de la cuenta fondeada</strong></td>
+      <td>Trailing drawdown, pérdida diaria máxima, posición máxima, bloqueos por noticias. NT8 no conoce ninguna. Una estrategia impecable en Sim101 puede violar una regla y liquidarte la cuenta. Esto necesita una guarda explícita en código o un kill switch externo — no es opcional.</td>
+    </tr>
+    <tr>
+      <td><strong>Latencia añadida</strong></td>
+      <td>El VPS en Chicago te compra latencia hacia CME. El copiador la vuelve a agregar del otro lado. El slippage que mida tu estrategia en el VPS no es el que vas a pagar en la cuenta replicada.</td>
+    </tr>
+    <tr>
+      <td><strong>129 × copiador</strong></td>
+      <td>Si las 129 pasan a vivo replicando, los fills se entrelazan. Con seis estrategias por instrumento, el orden de llegada en el destino no tiene por qué ser el de origen.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p class="box w"><span class="tag l">LEIDO</span>Y un detalle de testing que importa: NT8 advierte que las ejecuciones en vuelo <strong>no se pueden reproducir en Market Replay</strong>. Las rutas de overfill y de carrera cancel-contra-fill solo se ejercitan en conexión viva o simulada. Si tu validación es solo backtest y replay, esas rutas están literalmente sin probar.</p>
+
+<h2>El punto ciego que no preguntaste</h2>
+
+<div class="alarm">
+  <h3>Estás rankeando 129 candidatos con fills simulados</h3>
+  <p><span class="tag m">MEDIDO</span>Las 129 corren en <code>Sim101</code>, y la columna <code>Realizado(a)</code> es por donde se decide qué candidato sobrevive.</p>
+  <p>El simulador de NT8 llena de forma optimista salvo que lo configures explícitamente. Si la comisión y el slippage no están modelados con los valores reales de tu broker, el sesgo <strong>no es parejo</strong>: castiga menos a las estrategias que operan más. Sobre barras de 1 minuto, eso selecciona sistemáticamente a favor de la alta frecuencia, que es justo la que más sufre cuando los costos aparecen.</p>
+  <p>Dicho de otro modo: el ranking puede estar midiendo <em>cuántas veces opera cada candidato</em> más que si tiene ventaja.</p>
+  <p><strong>La medición que lo decide:</strong> volvé a correr el ranking con comisión y slippage realistas cargados, y compará el orden. Si el top-10 se reordena fuerte, el criterio de selección estaba midiendo otra cosa.</p>
+</div>
+<p class="box"><span class="tag i">NO VERIFICADO</span>No sé si ya tenés comisión y slippage configurados en Sim101 — eso no se ve en la grilla. Si ya están, este punto no aplica y descartalo.</p>
+
+<h2>Resumen de acciones</h2>
+<table>
+  <thead><tr><th>#</th><th>Acción</th><th>Por qué</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>Compuerta de compilación en <code>pre-push</code></td><td>Única defensa real contra romper las 129</td></tr>
+    <tr><td>2</td><td>Verificación por familia después de cada despliegue</td><td>Es lo que hoy habría cantado las 12 inertes</td></tr>
+    <tr><td>3</td><td>Guarda de reglas de cuenta fondeada en código</td><td>NT8 no las conoce; una violación liquida la cuenta</td></tr>
+    <tr><td>4</td><td>Re-rankear con costos reales antes de pasar a vivo</td><td>El criterio de selección puede estar sesgado</td></tr>
+    <tr><td>5</td><td><code>.gitignore</code> por lista blanca y subcarpetas con nombre</td><td>Lo desconocido queda afuera por defecto</td></tr>
+    <tr><td>6</td><td>Despliegue por etiqueta, modelo pull, ventana 16:00 CT</td><td>Respuesta exacta a «qué está corriendo»</td></tr>
+    <tr><td>7</td><td>Órdenes protectoras a <code>OnExecutionUpdate</code></td><td>Recomendación explícita de la guía de NT8</td></tr>
+  </tbody>
+</table>
+
+<footer>
+  <span class="tag l">LEIDO</span>Guía oficial de NT8 sobre
+  <a href="https://ninjatrader.com/pt/support/helpguides/nt8/onorderupdate.htm">OnOrderUpdate</a>;
+  hilos del foro de NinjaTrader sobre
+  <a href="https://forum.ninjatrader.com/forum/ninjatrader-8/strategy-development/100196-overfill-issue">overfills</a>,
+  <a href="https://forum.ninjatrader.com/forum/ninjatrader-8/strategy-development/1226716-issue-with-setting-up-stop-loss-orders-reliably-in-onexecutionupdate-for-partial-fill">fills parciales</a>,
+  <a href="https://forum.ninjatrader.com/forum/ninjatrader-8/strategy-development/1270868-what-is-good-workflow-for-developing-custom-indicator-and-strategy-with-git">flujo con Git</a> y
+  <a href="https://forum.ninjatrader.com/forum/ninjatrader-8/add-on-development/1253512-git-source-control-best-practices">control de versiones</a>.
+  Horarios de Globex contra las especificaciones de CME para
+  <a href="https://www.cmegroup.com/markets/metals/precious/e-micro-gold.html">MGC</a> y
+  <a href="https://www.cmegroup.com/markets/energy/crude-oil/micro-wti-crude-oil_contractSpecs_futures.html">MCL</a>.<br><br>
+  <span class="tag m">MEDIDO</span>La estructura de las 129, las columnas de posición y Sync, y las 12 filas en cero salen de tus propias capturas de la grilla de Estrategias del 8/10/2026 08:45–08:46.<br><br>
+  <strong>No verificado:</strong> qué le pasa exactamente a una estrategia corriendo durante un compile; si el build externo del <code>.csproj</code> coincide con el compilador interno de NT8; las capacidades de CrossTrade (su sitio está bloqueado desde mi contenedor); si Sim101 ya tiene comisión y slippage cargados; si las familias <code>VOLR_</code>/<code>VOLC_</code> son inertes por diseño.<br><br>
+  <strong>No ejecuté nada de este documento.</strong> Ni el build, ni el <code>.gitignore</code>, ni el despliegue. Son propuestas sin correr.
+</footer>
+
+</div>
+</body>
+</html>
