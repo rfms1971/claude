@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Runbook jueves y viernes</title>
+<style>
+  :root{
+    --bg:#faf9f7; --fg:#1a1915; --muted:#6b6862; --line:#e0ddd6;
+    --card:#ffffff; --ok:#2f6f4f; --no:#a3342a; --warn:#8a5a12;
+    --accent:#3b5bdb; --okbg:#eaf3ee; --nobg:#f8ecea; --warnbg:#fdf4e3;
+    --code:#f4f2ee;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#17171a; --fg:#eceae5; --muted:#9b978f; --line:#2e2d31;
+      --card:#1f1f23; --ok:#7bc49a; --no:#e59289; --warn:#e0b063;
+      --accent:#8fa6f5; --okbg:#1c2a22; --nobg:#2b1e1c; --warnbg:#2a2318;
+      --code:#232327;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#17171a; --fg:#eceae5; --muted:#9b978f; --line:#2e2d31;
+    --card:#1f1f23; --ok:#7bc49a; --no:#e59289; --warn:#e0b063;
+    --accent:#8fa6f5; --okbg:#1c2a22; --nobg:#2b1e1c; --warnbg:#2a2318;
+    --code:#232327;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--fg);
+    font:16px/1.6 ui-sans-serif,-apple-system,"Segoe UI",Roboto,sans-serif;
+    padding:40px 16px 90px;
+  }
+  .wrap{max-width:760px;margin:0 auto}
+  h1{font-size:1.9rem;line-height:1.2;margin:0 0 .3em;letter-spacing:-.02em}
+  .sub{color:var(--muted);margin:0 0 2em;font-size:.95rem}
+  .when{
+    display:flex;gap:10px;flex-wrap:wrap;margin:0 0 2.4em;
+  }
+  .when div{
+    flex:1 1 150px;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:12px 14px;
+  }
+  .when b{display:block;font-size:.72rem;text-transform:uppercase;
+          letter-spacing:.07em;color:var(--muted);margin-bottom:3px}
+  .when span{font-size:1.02rem;font-weight:600}
+  h2{font-size:1.2rem;margin:2.6em 0 .2em;letter-spacing:-.01em}
+  h2 .n{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:1.65em;height:1.65em;border-radius:50%;background:var(--accent);
+    color:#fff;font-size:.74em;font-weight:700;margin-right:.6em;vertical-align:2px;
+  }
+  .meta{color:var(--muted);font-size:.85rem;margin:0 0 1em;padding-left:2.9em}
+  h3{font-size:.98rem;margin:1.6em 0 .5em}
+  p{margin:0 0 .9em}
+  pre{
+    background:var(--code);border:1px solid var(--line);border-radius:8px;
+    padding:13px 15px;overflow-x:auto;margin:0 0 1em;
+    font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em;
+       background:var(--code);border:1px solid var(--line);border-radius:4px;padding:1px 5px}
+  pre code{background:none;border:none;padding:0;font-size:inherit}
+  .slot{color:var(--no);font-weight:700}
+  .box{border-left:3px solid var(--line);padding:3px 0 3px 16px;margin:0 0 1.1em;
+       color:var(--muted);font-size:.93rem}
+  .box.w{border-color:var(--warn)}
+  .box.k{border-color:var(--accent)}
+  .box.g{border-color:var(--ok)}
+  .box strong{color:var(--fg)}
+  .tag{
+    display:inline-block;font-size:.67rem;font-weight:700;letter-spacing:.07em;
+    padding:2px 7px;border-radius:4px;vertical-align:1px;margin-right:7px;
+    border:1px solid var(--line);color:var(--muted);background:var(--card);
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  .tag.m{color:var(--ok);background:var(--okbg);border-color:transparent}
+  .tag.l{color:var(--accent)}
+  .tag.i{color:var(--warn);background:var(--warnbg);border-color:transparent}
+  table{width:100%;border-collapse:collapse;margin:0 0 1.2em;font-size:.93rem}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+  td.y{color:var(--ok);font-weight:600}
+  td.n{color:var(--no);font-weight:600}
+  ul,ol{margin:0 0 1em;padding-left:1.35em}
+  li{margin:0 0 .4em}
+  .os{font-size:.74rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+      color:var(--muted);margin:1.3em 0 .4em}
+  hr{border:none;border-top:1px solid var(--line);margin:2.6em 0}
+  footer{margin-top:3em;padding-top:1.2em;border-top:1px solid var(--line);
+         font-size:.82rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Runbook: jueves y viernes sin chequeo</h1>
+<p class="sub">Si el chequeo matutino no corre el 8 y el 9 de octubre · zona GMT-6</p>
+
+<div class="when">
+  <div><b>Armar</b><span>Hoy miércoles, 15 min</span></div>
+  <div><b>Verificar</b><span>Jue 8 y vie 9, 1 min</span></div>
+  <div><b>Recuperar</b><span>Sábado 10, 10 min</span></div>
+</div>
+
+<p>Solo una mitad del chequeo es sensible a la hora. El resto se recupera. El objetivo de este runbook es preservar <strong>únicamente lo irrecuperable</strong> con el mínimo de trabajo.</p>
+
+<table>
+  <thead><tr><th>Punto</th><th>Qué lee</th><th>Si no corre</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Punto 1 / A</strong></td><td>Cuenta filas de la DB</td><td class="n">Se pierde para siempre</td></tr>
+    <tr><td><strong>Punto 2</strong></td><td>Lee el archivo entero</td><td class="y">Se recupera el sábado</td></tr>
+  </tbody>
+</table>
+<p class="box"><span class="tag l">LEIDO</span>De las REGLAS 3 y 4 del protocolo. El punto 2 filtra por archivo y lee el archivo completo, no una ventana de tiempo: por eso una corrida posterior lo ve todo. Un conteo de filas es una foto del momento y no se reconstruye.</p>
+
+<hr>
+
+<h2><span class="n">1</span>Localizar el chequeo</h2>
+<p class="meta">Hoy · 5 min · solo lectura</p>
+
+<p>Hay que saber si está programado y dónde, porque de eso depende si el paso 2 lo reemplaza o lo acompaña.</p>
+
+<p class="box k"><span class="tag m">MEDIDO</span>Ya descarté dos lugares: <strong>no hay Routines</strong> en la cuenta (<code>list_triggers</code> = 0, también con <code>include_completed</code> y <code>all_in_channel</code>), y <strong>este repositorio no es la fuente</strong> (último commit de datos 2026-05-22, ningún <code>.txt</code> posterior). Queda Cowork, el programador del sistema, o a mano.</p>
+
+<p class="os">Windows</p>
+<pre><code>schtasks /query /fo LIST /v | findstr /i "06:25 chequeo check informe"</code></pre>
+
+<p class="os">Linux / macOS</p>
+<pre><code>crontab -l
+ls -la /etc/cron.d/ 2>/dev/null
+systemctl list-timers --all 2>/dev/null | head -20
+launchctl list 2>/dev/null | grep -iE "check|informe|0625"</code></pre>
+
+<p class="os">Cowork</p>
+<p>Abrir la app y revisar su lista de tareas programadas. <span class="tag l">LEIDO</span> La documentación de <code>list_triggers</code> dice que <em>«scheduled tasks stored locally by the Cowork desktop app are not listed»</em>, así que desde acá no las veo: hay que mirarlas en la app.</p>
+
+<p class="box g">Anotá el resultado: <strong>programado y dónde</strong>, o <strong>a mano</strong>. Si no aparece en ningún lado, es a mano, y el paso 2 pasa a ser la única cobertura.</p>
+
+<hr>
+
+<h2><span class="n">2</span>Armar la captura de las 06:25</h2>
+<p class="meta">Hoy · 10 min · escribe un archivo nuevo, no toca nada existente</p>
+
+<p>Esta captura es <strong>independiente del chequeo</strong>. No lo reemplaza ni lo modifica: solo guarda la foto que no se puede reconstruir. Corre el jueves y el viernes y después se borra.</p>
+
+<h3>2a · El script</h3>
+
+<p class="box w"><span class="tag i">SUPUESTO</span>Hay un hueco marcado en rojo que no puedo llenar: <strong>no sé cuál es la consulta</strong> que usa el punto 1 ni contra qué motor corre. Reemplazá <code class="slot">&lt;CONSULTA&gt;</code> por el <code>SELECT COUNT(*)</code> que ya usa tu chequeo, y la línea de conexión por la tuya.</p>
+
+<p class="os">Windows · guardar como <code>C:\captura0625.ps1</code></p>
+<pre><code>$ErrorActionPreference = "Continue"
+$log = "C:\captura0625.log"
+$ts  = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss zzz")
+
+try {
+    # &lt;CONSULTA&gt;  ← reemplazar por la consulta real del punto 1
+    $n = sqlcmd -S localhost -d MI_DB -h -1 -W -Q "SET NOCOUNT ON; SELECT COUNT(*) FROM MI_TABLA"
+    $n = ($n | Select-Object -First 1).Trim()
+    Add-Content $log "$ts`tOK`t$n"
+}
+catch {
+    Add-Content $log "$ts`tERROR`t$($_.Exception.Message)"
+}</code></pre>
+
+<p class="os">Linux / macOS · guardar como <code>~/captura0625.sh</code> y <code>chmod +x</code></p>
+<pre><code>#!/usr/bin/env bash
+LOG="$HOME/captura0625.log"
+TS=$(date '+%Y-%m-%d %H:%M:%S %z')
+
+# &lt;CONSULTA&gt;  ← reemplazar por la consulta real del punto 1
+if N=$(psql -d MI_DB -tAc "SELECT COUNT(*) FROM MI_TABLA" 2>&1); then
+    printf '%s\tOK\t%s\n' "$TS" "$N" &gt;&gt; "$LOG"
+else
+    printf '%s\tERROR\t%s\n' "$TS" "$N" &gt;&gt; "$LOG"
+fi</code></pre>
+
+<p class="box k"><strong>Por qué escribe una línea siempre, incluso al fallar.</strong> <span class="tag l">LEIDO</span> La REGLA 5 registra que del 09-29 al 10-02 el log dio cero líneas con 129 corriendo: cero no distingue «no pasó nada» de «pasa sin escribir línea». Con este diseño, <strong>ninguna línea significa una sola cosa: la tarea no disparó</strong>. La ambigüedad queda eliminada por construcción.</p>
+
+<h3>2b · Programarla para el 8 y el 9</h3>
+
+<p class="os">Windows</p>
+<pre><code>schtasks /create /tn "Captura0625" ^
+  /tr "powershell -NoProfile -ExecutionPolicy Bypass -File C:\captura0625.ps1" ^
+  /sc daily /st 06:25 /sd 2026/10/08 /ed 2026/10/09</code></pre>
+<p class="box w"><strong>Trampa de locale:</strong> <code>schtasks</code> toma la fecha en el formato regional de la máquina. Si rechaza <code>2026/10/08</code>, probá <code>10/08/2026</code> o <code>08/10/2026</code>. No asumas que quedó: verificalo en 2c.</p>
+
+<p class="os">Linux / macOS · <code>crontab -e</code></p>
+<pre><code>25 6 8,9 10 * /bin/bash $HOME/captura0625.sh</code></pre>
+<p>Minuto 25, hora 6, días 8 y 9, mes 10. Sin riesgo de formato de fecha.</p>
+
+<h3>2c · Verificar que quedó armada</h3>
+<p>Programarla no es haberla programado. Medilo:</p>
+<p class="os">Windows</p>
+<pre><code>schtasks /query /tn "Captura0625" /fo LIST /v | findstr /i "Hora Next Siguiente Estado Status"</code></pre>
+<p class="os">Linux / macOS</p>
+<pre><code>crontab -l | grep captura0625</code></pre>
+
+<p class="box g">Y una prueba en seco, ahora mismo, que no espera al jueves: corré el script a mano una vez y confirmá que escribió su línea.</p>
+<pre><code># Windows
+powershell -NoProfile -ExecutionPolicy Bypass -File C:\captura0625.ps1
+type C:\captura0625.log
+
+# Linux / macOS
+bash ~/captura0625.sh &amp;&amp; tail -3 ~/captura0625.log</code></pre>
+<p>Si esa línea no aparece, el jueves tampoco va a aparecer. Arreglalo hoy, no el sábado.</p>
+
+<hr>
+
+<h2><span class="n">3</span>Mirar el log, jueves y viernes</h2>
+<p class="meta">Jue 8 y vie 9 · 1 min · solo lectura</p>
+
+<pre><code># Windows
+type C:\captura0625.log
+
+# Linux / macOS
+cat ~/captura0625.log</code></pre>
+
+<table>
+  <thead><tr><th>Lo que ves</th><th>Qué significa</th><th>Acción</th></tr></thead>
+  <tbody>
+    <tr><td><code>... OK  &lt;n&gt;</code></td><td>La foto quedó</td><td class="y">Nada</td></tr>
+    <tr><td><code>... ERROR ...</code></td><td>Disparó pero no pudo consultar</td><td>Arreglar la conexión y correr a mano el mismo día</td></tr>
+    <tr><td>Sin línea nueva</td><td>La tarea no disparó</td><td class="n">Correr a mano ya; revisar el paso 2c</td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2><span class="n">4</span>Recuperar el sábado</h2>
+<p class="meta">Sáb 10 · 10 min</p>
+
+<ol>
+  <li>Correr el <strong>chequeo matutino completo</strong>, una vez. El punto 2 lee el archivo entero, así que en esa corrida ve lo que jueves y viernes escribieron. No hay que correrlo dos veces ni truncar nada.</li>
+  <li>Leer <code>captura0625.log</code> y cruzar los dos conteos del jueves y viernes contra lo que el punto 2 reporte.</li>
+  <li>Borrar la tarea temporal.</li>
+</ol>
+
+<pre><code># Windows
+schtasks /delete /tn "Captura0625" /f
+
+# Linux / macOS
+crontab -e   # y borrar la línea de captura0625
+</code></pre>
+
+<p class="box w"><strong>Lo que no recupera el sábado:</strong> la detección a tiempo. Si algo se rompió el jueves a las 07:00, te enterás 48 h después. El conteo guardado te dice <em>que</em> cambió, no <em>cuándo</em> dentro de esas 48 h. Esa latencia no la compra ningún runbook: solo la compra que el chequeo corra.</p>
+
+<hr>
+
+<h2><span class="n">5</span>Si el chequeo no corre por cupo</h2>
+<p class="meta">Opcional · depende de un dato que no tengo</p>
+
+<p>Si la causa de que no corra es el límite de uso del plan, hay 98 US$ en el bono de nube que vencen el <strong>5 de noviembre 01:59 GMT-6</strong> y que hoy no se están tocando. Una sesión de nube arrancada a mano los gasta en lugar de gastar el cupo del plan.</p>
+
+<p class="box w"><span class="tag i">INFERIDO · no verificado</span><strong>Posible bloqueo.</strong> Si el chequeo necesita la DB y los archivos que viven en Chicago o Houston, una sesión de nube no los alcanza y esta vía no sirve. Antes de planearla hay que confirmar si la DB es accesible desde fuera de la máquina. No lo medí.</p>
+
+<footer>
+  <span class="tag m">MEDIDO</span>Routines en la cuenta: <code>0</code>, con <code>include_completed</code> y <code>all_in_channel</code>. Último commit de datos del repo: <code>2026-05-22</code>, sin <code>.txt</code> posteriores.<br><br>
+  <span class="tag l">LEIDO</span>Las REGLAS 3, 4 y 5 del protocolo, de donde sale la asimetría entre los dos puntos y el diseño de escribir línea siempre. Documentación de <code>list_triggers</code> sobre las tareas locales de Cowork.<br><br>
+  <strong>No ejecuté nada de este runbook.</strong> No tengo acceso a Chicago ni a Houston. Todos los comandos están sin correr y las rutas, la consulta del punto 1, el motor de base de datos y el sistema operativo son supuestos a confirmar.<br><br>
+  <strong>No verificado:</strong> dónde corre el chequeo; cuál es la consulta del punto 1; si hay más puntos además de 1 y 2; por qué no correría el jueves.
+</footer>
+
+</div>
+</body>
+</html>
