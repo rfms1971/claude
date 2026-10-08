@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Créditos de Nube</title>
+<style>
+  :root{
+    --bg:#faf9f7; --fg:#1a1915; --muted:#6b6862; --line:#e0ddd6;
+    --card:#ffffff; --ok:#2f6f4f; --no:#a3342a; --warn:#8a5a12;
+    --accent:#3b5bdb; --okbg:#eaf3ee; --nobg:#f8ecea; --warnbg:#fdf4e3;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#17171a; --fg:#eceae5; --muted:#9b978f; --line:#2e2d31;
+      --card:#1f1f23; --ok:#7bc49a; --no:#e59289; --warn:#e0b063;
+      --accent:#8fa6f5; --okbg:#1c2a22; --nobg:#2b1e1c; --warnbg:#2a2318;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#17171a; --fg:#eceae5; --muted:#9b978f; --line:#2e2d31;
+    --card:#1f1f23; --ok:#7bc49a; --no:#e59289; --warn:#e0b063;
+    --accent:#8fa6f5; --okbg:#1c2a22; --nobg:#2b1e1c; --warnbg:#2a2318;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--fg);
+    font:16px/1.6 ui-sans-serif,-apple-system,"Segoe UI",Roboto,sans-serif;
+    padding:40px 16px 80px;
+  }
+  .wrap{max-width:720px;margin:0 auto}
+  h1{font-size:1.9rem;line-height:1.2;margin:0 0 .3em;letter-spacing:-.02em}
+  .sub{color:var(--muted);margin:0 0 2.2em;font-size:.95rem}
+  h2{font-size:1.15rem;margin:2.4em 0 .7em;letter-spacing:-.01em;
+     padding-bottom:.35em;border-bottom:1px solid var(--line)}
+  p{margin:0 0 1em}
+  .bal{
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:20px 22px;margin:0 0 1.6em;
+  }
+  .bal .num{font-size:2.4rem;font-weight:650;letter-spacing:-.03em;line-height:1}
+  .bal .num small{font-size:1rem;font-weight:400;color:var(--muted);letter-spacing:0}
+  .bar{height:7px;background:var(--line);border-radius:4px;margin:14px 0 10px;overflow:hidden}
+  .bar i{display:block;height:100%;width:2%;background:var(--accent);border-radius:4px}
+  .bal .meta{font-size:.85rem;color:var(--muted);margin:0}
+  table{width:100%;border-collapse:collapse;margin:0 0 1.4em;font-size:.94rem}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-weight:600;font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+  td.y{color:var(--ok);font-weight:600;white-space:nowrap}
+  td.n{color:var(--no);font-weight:600;white-space:nowrap}
+  tr.hi td{background:var(--okbg)}
+  .tag{
+    display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.07em;
+    padding:2px 7px;border-radius:4px;vertical-align:1px;margin-right:7px;
+    border:1px solid var(--line);color:var(--muted);background:var(--card);
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  .tag.m{color:var(--ok);background:var(--okbg);border-color:transparent}
+  .tag.l{color:var(--accent);background:var(--card)}
+  .tag.i{color:var(--warn);background:var(--warnbg);border-color:transparent}
+  .box{border-left:3px solid var(--line);padding:2px 0 2px 16px;margin:0 0 1.3em;
+       color:var(--muted);font-size:.94rem}
+  .box.w{border-color:var(--warn)}
+  .box.k{border-color:var(--accent)}
+  .box strong{color:var(--fg)}
+  ul{margin:0 0 1.2em;padding-left:1.3em}
+  li{margin:0 0 .45em}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em;
+       background:var(--card);border:1px solid var(--line);border-radius:4px;padding:1px 5px}
+  footer{margin-top:3.5em;padding-top:1.2em;border-top:1px solid var(--line);
+         font-size:.82rem;color:var(--muted)}
+  footer a{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Créditos de sesión en la nube</h1>
+<p class="sub">Diagnóstico · 8 de octubre de 2026</p>
+
+<div class="bal">
+  <div class="num">98 US$ <small>de 100 US$</small></div>
+  <div class="bar"><i></i></div>
+  <p class="meta">Vence <strong>5 nov, 01:59 GMT-6</strong> (= 4 nov 23:59 PT) · quedan 27 días · consumido: 2&nbsp;US$</p>
+</div>
+
+<h2>El saldo no está bloqueado</h2>
+<p>Es el <strong>bono de sesiones en la nube</strong> (promoción: 100&nbsp;US$ Pro / 250&nbsp;US$ Max). Se consume <em>antes</em> que el plan: mientras dure, el uso en la nube no cuenta contra los límites de la suscripción.</p>
+<p>Está casi intacto porque <strong>solo lo gastan las sesiones de nube arrancadas a mano</strong>. El trabajo diario corre por canales que el bono no cubre.</p>
+
+<h2>Qué cubre y qué no</h2>
+<table>
+  <thead><tr><th>Superficie</th><th>Consume el bono</th></tr></thead>
+  <tbody>
+    <tr class="hi"><td><code>claude --cloud "&lt;tarea&gt;"</code> desde terminal</td><td class="y">Sí</td></tr>
+    <tr class="hi"><td><strong>claude.ai/code</strong> en el navegador</td><td class="y">Sí</td></tr>
+    <tr class="hi"><td>App de escritorio → opción <strong>Cloud</strong></td><td class="y">Sí</td></tr>
+    <tr class="hi"><td>Pestaña <strong>Code</strong> en el móvil</td><td class="y">Sí</td></tr>
+    <tr><td><strong>Routines</strong> (corridas programadas)</td><td class="n">No</td></tr>
+    <tr><td><strong>Cowork</strong></td><td class="n">No</td></tr>
+    <tr><td><strong>Projects</strong></td><td class="n">No</td></tr>
+    <tr><td>Chat en claude.ai</td><td class="n">No</td></tr>
+    <tr><td>Remote control · CLI local · opción <strong>Local</strong></td><td class="n">No</td></tr>
+  </tbody>
+</table>
+<p class="box"><span class="tag l">LEIDO</span>Artículo de soporte 17152539, <em>Cloud sessions bonus credit promotion</em>. La lista de exclusiones es textual del artículo.</p>
+
+<h2>Los otros tres «créditos», que no sirven acá</h2>
+<ul>
+  <li><strong>Créditos de API</strong> del Console (pay-as-you-go) — no se gastan mientras estés logueado con la suscripción.</li>
+  <li><strong>Créditos de API mensuales del plan Max</strong> — textual: <em>«can't be used in Claude Code or the Claude apps, including for extra usage»</em>.</li>
+  <li><strong>Usage credits / extra usage</strong> — sí funcionan en Claude Code, pero son <em>otra cosa</em>: se habilitan en Settings → Usage, se facturan aparte a tarifa API, y entran <em>después</em> de que el bono se agote.</li>
+</ul>
+
+<h2>Lo que esto explica del protocolo</h2>
+<p class="box k"><span class="tag i">INFERIDO</span><strong>No verificado.</strong> La REGLA 8 registra que el informe de las 06:25 no corrió el 10-02 por límite de créditos. Si ese informe está armado como <strong>Routine</strong>, no toca los 100&nbsp;US$: compite contra el límite del plan. Eso explicaría un corte teniendo 98&nbsp;US$ al lado sin usar. Las preferencias marcadas <code>[Imported from Cowork]</code> apuntan a lo mismo: Cowork tampoco cuenta.</p>
+
+<h2>Contradicción sin resolver</h2>
+<p class="box w"><span class="tag l">LEIDO</span>La documentación de Claude Code afirma que <em>«Routines: scheduled and triggered runs each run as a cloud session»</em>. El artículo de soporte excluye Routines del bono. Las dos son fuentes oficiales y se contradicen; <strong>no lo resolví</strong>. Posible lectura: una Routine es técnicamente una sesión de nube pero queda excluida de la promoción a propósito.</p>
+
+<h2>La medición que lo decide</h2>
+<p>De solo lectura, y discrimina entre las dos hipótesis:</p>
+<ul>
+  <li>Anotar el saldo exacto <strong>ahora</strong>.</li>
+  <li>Dejar correr <strong>una</strong> Routine.</li>
+  <li>Volver a mirar el saldo.</li>
+</ul>
+<p><strong>Si bajó</strong> → las Routines sí consumen el bono, y el corte del 10-02 tuvo otra causa.<br>
+<strong>Si quedó igual</strong> → confirmado: las Routines van contra el plan. Ahí está la causa, y el arreglo es migrar el informe a una sesión de nube disparada a mano mientras dure el crédito.</p>
+
+<h2>Acción, con fecha límite</h2>
+<p>Quedan <strong>27 días</strong> y <strong>98&nbsp;US$</strong> que caducan sin reembolso. Para gastarlos, el trabajo pesado tiene que entrar por las cuatro filas verdes de la tabla. Todo lo que corra por Routines, Cowork, Projects o local sigue descontando del plan y deja el bono intacto hasta que expire.</p>
+
+<footer>
+  <span class="tag m">MEDIDO</span>Esta sesión es de nube: <code>CLAUDE_CODE_REMOTE=true</code>, <code>CLAUDE_CODE_REMOTE_ENVIRONMENT_TYPE=cloud_default</code>, sin <code>ANTHROPIC_API_KEY</code> en el entorno.<br><br>
+  <strong>No verificado:</strong> si el bono se está debitando efectivamente por esta sesión; cómo está implementado el informe de las 06:25; el estado de <em>usage credits</em> en la cuenta. No tengo acceso a la facturación.<br><br>
+  Fuentes:
+  <a href="https://support.claude.com/en/articles/17152539-cloud-sessions-bonus-credit-promotion">soporte 17152539</a> ·
+  <a href="https://support.claude.com/en/articles/11145838">soporte 11145838</a> ·
+  <a href="https://support.claude.com/en/articles/12429409-manage-usage-credits-for-paid-claude-plans">soporte 12429409</a> ·
+  <a href="https://code.claude.com/docs/en/claude-code-on-the-web">docs: Claude Code en la nube</a>
+</footer>
+
+</div>
+</body>
+</html>
