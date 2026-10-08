@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Antes de las 7</title>
+<style>
+  :root{
+    --bg:#faf9f7; --fg:#1a1915; --muted:#6b6862; --line:#e0ddd6;
+    --card:#ffffff; --ok:#2f6f4f; --no:#a3342a; --warn:#8a5a12;
+    --accent:#3b5bdb; --okbg:#eaf3ee; --nobg:#f8ecea; --warnbg:#fdf4e3;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#17171a; --fg:#eceae5; --muted:#9b978f; --line:#2e2d31;
+      --card:#1f1f23; --ok:#7bc49a; --no:#e59289; --warn:#e0b063;
+      --accent:#8fa6f5; --okbg:#1c2a22; --nobg:#2b1e1c; --warnbg:#2a2318;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#17171a; --fg:#eceae5; --muted:#9b978f; --line:#2e2d31;
+    --card:#1f1f23; --ok:#7bc49a; --no:#e59289; --warn:#e0b063;
+    --accent:#8fa6f5; --okbg:#1c2a22; --nobg:#2b1e1c; --warnbg:#2a2318;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--fg);
+    font:17px/1.55 ui-sans-serif,-apple-system,"Segoe UI",Roboto,sans-serif;
+    padding:34px 16px 70px;
+  }
+  .wrap{max-width:620px;margin:0 auto}
+  h1{font-size:1.8rem;line-height:1.15;margin:0 0 .25em;letter-spacing:-.025em}
+  .sub{color:var(--muted);margin:0 0 1.6em;font-size:.92rem}
+  .step{
+    background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);
+    border-radius:10px;padding:16px 18px;margin:0 0 14px;
+  }
+  .step h2{
+    font-size:1.08rem;margin:0 0 .5em;letter-spacing:-.01em;display:flex;
+    align-items:baseline;gap:.55em;
+  }
+  .step h2 i{
+    flex:none;font-style:normal;font-size:.72em;font-weight:700;color:#fff;
+    background:var(--accent);width:1.7em;height:1.7em;border-radius:50%;
+    display:inline-flex;align-items:center;justify-content:center;
+  }
+  .step p{margin:0 0 .6em}
+  .step p:last-child{margin-bottom:0}
+  .look{font-weight:600}
+  .inval{
+    font-size:.88rem;color:var(--warn);background:var(--warnbg);
+    border-radius:6px;padding:8px 11px;margin:.7em 0 0;
+  }
+  .inval b{color:inherit}
+  .verdict{
+    background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:4px 18px;margin:26px 0 0;
+  }
+  .verdict h2{font-size:1.02rem;margin:14px 0 .5em}
+  table{width:100%;border-collapse:collapse;font-size:.92rem;margin:0 0 14px}
+  td{padding:7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+  td:first-child{font-weight:600;width:42%;padding-right:12px}
+  tr:last-child td{border-bottom:none}
+  .y{color:var(--ok)} .n{color:var(--no)}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.86em;
+       background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:1px 5px}
+  .tag{
+    display:inline-block;font-size:.65rem;font-weight:700;letter-spacing:.07em;
+    padding:2px 6px;border-radius:4px;vertical-align:1px;margin-right:6px;
+    border:1px solid var(--line);color:var(--muted);background:var(--bg);
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  .tag.m{color:var(--ok);background:var(--okbg);border-color:transparent}
+  .tag.l{color:var(--accent)}
+  .tag.i{color:var(--warn);background:var(--warnbg);border-color:transparent}
+  .note{border-left:3px solid var(--line);padding:2px 0 2px 14px;margin:0 0 1em;
+        color:var(--muted);font-size:.89rem}
+  .note strong{color:var(--fg)}
+  .note.k{border-color:var(--accent)}
+  footer{margin-top:2.4em;padding-top:1.1em;border-top:1px solid var(--line);
+         font-size:.8rem;color:var(--muted)}
+  footer a{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Antes de las 7</h1>
+<p class="sub">Jueves 8 y viernes 9 de octubre · tres cosas, dos minutos</p>
+
+<div class="step">
+  <h2><i>1</i>Gráfico nuevo, no uno abierto</h2>
+  <p>Abrir uno <strong>nuevo</strong> es lo que hace válido el chequeo: fuerza un pedido de datos en vez de mostrar lo que ya estaba en memoria.</p>
+  <p class="look">Mirar: que aparezcan barras <em>y</em> que la última avance.</p>
+  <p class="inval"><b>Lo invalida:</b> un gráfico ya abierto, o uno nuevo donde hay barras pero la última no se mueve. Barras dibujadas no prueban conexión viva — pueden venir del caché.</p>
+</div>
+
+<div class="step">
+  <h2><i>2</i>El precio se mueve, en los dos</h2>
+  <p>Un vistazo te da un número, no un cambio. Hay que <strong>quedarse mirando 20 o 30 segundos</strong>.</p>
+  <p class="look">Mirar: el último precio o el reloj de la última barra, en <strong>MGC y MCL por separado</strong>.</p>
+  <p class="inval"><b>Lo invalida:</b> revisar uno solo. Un feed puede estar vivo y el otro muerto. «El feed anda» no significa nada si no decís <em>de qué instrumento</em>.</p>
+</div>
+
+<div class="step">
+  <h2><i>3</i>Las estrategias: contarlas</h2>
+  <p>«Están activadas» no discrimina. <strong>Cuántas</strong> están activadas, sí.</p>
+  <p class="look">Mirar: el número de estrategias habilitadas, y compararlo con el que corresponde.</p>
+  <p class="inval"><b>Lo invalida:</b> ver que «algunas» están prendidas y darlo por bueno. Si esperás 7 y hay 5, un sí/no no lo detecta. <span class="tag l">LEIDO</span>La REGLA 4 registra justo este caso: 122 líneas de <code>Enabling</code> eran compatibles con «las 7 ya estaban prendidas» y con «las 7 siguen apagadas».</p>
+  <p class="inval"><b>Y además:</b> habilitada en el gráfico no es lo mismo que ruteo de órdenes habilitado. Una estrategia puede figurar activa mientras el envío de órdenes está apagado a nivel cuenta. Son dos interruptores.</p>
+</div>
+
+<div class="verdict">
+  <h2>Qué hacer con lo que viste</h2>
+  <table>
+    <tr><td class="y">Las tres pasan</td><td>Listo. No hace falta nada más antes de las 7.</td></tr>
+    <tr><td class="n">Precio quieto</td><td>A esta hora el mercado está abierto: es alarma real. Revisar la conexión del feed antes de seguir.</td></tr>
+    <tr><td class="n">Faltan estrategias</td><td>Prenderlas y <strong>volver a contar</strong>. No asumir que el clic surtió efecto.</td></tr>
+    <tr><td class="n">Barras sí, última quieta</td><td>Caché, no conexión. Reconectar y abrir otro gráfico nuevo.</td></tr>
+  </table>
+</div>
+
+<p class="note k" style="margin-top:22px"><span class="tag m">MEDIDO</span><strong>Por qué la hora sirve.</strong> El único corte diario de MGC y MCL en Globex es a las <strong>16:00 CT</strong>. A las 06:25 los dos están abiertos y en su franja líquida, así que un precio quieto no se explica por el mercado. Si el chequeo fuera a las 16:30, un precio quieto no diría nada.</p>
+
+<p class="note"><span class="tag i">A CONFIRMAR</span>El número de estrategias que corresponde. El protocolo menciona «las 7», pero eso sale del texto del 10-04 y <strong>no verifiqué que siga siendo 7</strong>. Fijá el número esperado antes del jueves: sin número esperado, el paso 3 vuelve a ser un sí/no.</p>
+
+<p class="note"><span class="tag i">A CONFIRMAR</span>Feriados. Las sesiones se acortan en días de feriado y eso corre la lógica del paso 2. No miré el calendario de CME para el 8 y el 9 de octubre.</p>
+
+<footer>
+  <span class="tag m">MEDIDO</span>Horario de Globex para MGC y MCL: sesión de domingo a viernes con un único corte diario de 60 minutos a las 16:00 CT, según las páginas de especificaciones de CME
+  (<a href="https://www.cmegroup.com/markets/metals/precious/e-micro-gold.html">MGC</a>,
+  <a href="https://www.cmegroup.com/markets/energy/crude-oil/micro-wti-crude-oil_contractSpecs_futures.html">MCL</a>).<br><br>
+  <span class="tag l">LEIDO</span>REGLA 3 (declarar el alcance), REGLA 4 (la medición tiene que discriminar) y su caso de las líneas de <code>Enabling</code>, del protocolo v2.<br><br>
+  <strong>No verificado:</strong> el número de estrategias esperado; el calendario de feriados de CME para esas fechas; si tu plataforma distingue el estado de la estrategia del estado del ruteo con la claridad que supone el paso 3.<br><br>
+  Reemplaza el runbook de captura automática, que partía de un supuesto equivocado sobre qué hace el chequeo.
+</footer>
+
+</div>
+</body>
+</html>
